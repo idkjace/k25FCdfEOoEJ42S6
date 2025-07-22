@@ -1,0 +1,29 @@
+# .github/workflows/sync.yml
+name: Auto Sync Fork
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Set Git config
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+
+      - name: Add upstream and sync
+        run: |
+          git remote add upstream https://github.com/qwe213312/k25FCdfEOoEJ42S6.git
+          git fetch upstream
+          git checkout main
+          git merge upstream/main
+          git push origin main
